@@ -1,0 +1,33 @@
+# ============================================================
+# experiments/exp_baseline.yaml
+# Baseline DQN configuration — this is the control experiment.
+# All other experiments change ONE parameter vs this baseline.
+# ============================================================
+
+environment:
+  name: "LunarLander-v2"
+  seed: 42
+  render_mode: null
+
+agent:
+  learning_rate: 0.0005       # Baseline LR
+  gamma: 0.99
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.995        # Baseline: ~300 eps to reach epsilon_min
+  batch_size: 64
+  replay_buffer_size: 50000
+  target_update_freq: 10
+  hidden_size: 128
+
+training:
+  max_episodes: 600
+  max_steps_per_episode: 1000
+  solve_score: 200.0
+  checkpoint_freq: 100
+  log_freq: 10
+
+paths:
+  model_dir: "models/baseline"
+  experiment_dir: "experiments/baseline"
+  log_file: "experiments/baseline/training_log.csv"

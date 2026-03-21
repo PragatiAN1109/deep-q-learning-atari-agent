@@ -1,0 +1,44 @@
+# ============================================================
+# experiments/exp_low_lr.yaml
+# Experiment: Lower learning rate (0.0001 vs baseline 0.0005)
+#
+# Hypothesis:
+#   A lower LR makes smaller gradient updates each step.
+#   The network converges more slowly but may find a more stable
+#   solution and avoid oscillation around the optimal Q-values.
+#   We expect: slower initial learning, potentially higher final
+#   reward if baseline LR was causing overshooting.
+#
+# What we're measuring:
+#   - How many episodes to first reach avg reward >= 100
+#   - Final avg reward after 600 episodes
+#   - Training stability (variance in per-episode reward)
+# ============================================================
+
+environment:
+  name: "LunarLander-v2"
+  seed: 42
+  render_mode: null
+
+agent:
+  learning_rate: 0.0001       # CHANGED: 5x lower than baseline
+  gamma: 0.99
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.995        # Same as baseline
+  batch_size: 64
+  replay_buffer_size: 50000
+  target_update_freq: 10
+  hidden_size: 128
+
+training:
+  max_episodes: 600
+  max_steps_per_episode: 1000
+  solve_score: 200.0
+  checkpoint_freq: 100
+  log_freq: 10
+
+paths:
+  model_dir: "models/low_lr"
+  experiment_dir: "experiments/low_lr"
+  log_file: "experiments/low_lr/training_log.csv"

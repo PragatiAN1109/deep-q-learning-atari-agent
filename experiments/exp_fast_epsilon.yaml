@@ -1,0 +1,45 @@
+# ============================================================
+# experiments/exp_fast_epsilon.yaml
+# Experiment: Fast epsilon decay (0.990 vs baseline 0.995)
+#
+# Hypothesis:
+#   Decaying epsilon faster means the agent stops exploring and
+#   commits to exploiting its policy much sooner (~150 eps vs ~300).
+#   If the Q-network has not learned good Q-values yet, premature
+#   exploitation locks the agent into a suboptimal policy.
+#   We expect: faster early convergence but lower final reward
+#   because the agent exploits a half-learned policy too early.
+#
+# What we're measuring:
+#   - Peak reward and when it's reached
+#   - Whether the agent plateaus earlier than baseline
+#   - Comparison of reward curves: steeper rise but lower ceiling?
+# ============================================================
+
+environment:
+  name: "LunarLander-v2"
+  seed: 42
+  render_mode: null
+
+agent:
+  learning_rate: 0.0005
+  gamma: 0.99
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.990        # CHANGED: faster decay (~150 eps to epsilon_min)
+  batch_size: 64
+  replay_buffer_size: 50000
+  target_update_freq: 10
+  hidden_size: 128
+
+training:
+  max_episodes: 600
+  max_steps_per_episode: 1000
+  solve_score: 200.0
+  checkpoint_freq: 100
+  log_freq: 10
+
+paths:
+  model_dir: "models/fast_epsilon"
+  experiment_dir: "experiments/fast_epsilon"
+  log_file: "experiments/fast_epsilon/training_log.csv"

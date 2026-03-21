@@ -1,0 +1,45 @@
+# ============================================================
+# experiments/exp_slow_epsilon.yaml
+# Experiment: Slow epsilon decay (0.998 vs baseline 0.995)
+#
+# Hypothesis:
+#   Keeping epsilon high for longer (~600 eps to reach epsilon_min)
+#   means the agent explores nearly the entire training budget.
+#   This gives the replay buffer more diverse transitions but the
+#   agent rarely exploits its learned policy.
+#   We expect: slower convergence, possibly better final performance
+#   if the problem requires thorough exploration of the state space.
+#
+# What we're measuring:
+#   - How long until the agent starts improving
+#   - Whether sustained exploration leads to a better final policy
+#   - Trade-off between exploration time and exploitation quality
+# ============================================================
+
+environment:
+  name: "LunarLander-v2"
+  seed: 42
+  render_mode: null
+
+agent:
+  learning_rate: 0.0005
+  gamma: 0.99
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.998        # CHANGED: slower decay (~600 eps to epsilon_min)
+  batch_size: 64
+  replay_buffer_size: 50000
+  target_update_freq: 10
+  hidden_size: 128
+
+training:
+  max_episodes: 600
+  max_steps_per_episode: 1000
+  solve_score: 200.0
+  checkpoint_freq: 100
+  log_freq: 10
+
+paths:
+  model_dir: "models/slow_epsilon"
+  experiment_dir: "experiments/slow_epsilon"
+  log_file: "experiments/slow_epsilon/training_log.csv"
