@@ -1,0 +1,36 @@
+# ============================================================
+# config.yaml — Central configuration for the DQN experiment
+#
+# ALL hyperparameters live here so every experiment run is
+# reproducible and parameter changes are tracked as git diffs.
+# To run a new experiment, duplicate this file, tweak values,
+# and pass the path as a CLI argument to the training script.
+# ============================================================
+
+environment:
+  name: "LunarLander-v2"   # Gymnasium environment ID
+  seed: 42                  # Global random seed for reproducibility
+  render_mode: null         # null = headless training; "human" = live window
+
+agent:
+  learning_rate: 0.0005     # Adam optimizer learning rate
+  gamma: 0.99               # Discount factor for future rewards
+  epsilon_start: 1.0        # Initial exploration rate (fully random)
+  epsilon_end: 0.05         # Minimum exploration rate (5% random)
+  epsilon_decay: 0.995      # Multiplicative decay applied each episode
+  batch_size: 64            # Mini-batch size sampled from replay buffer
+  replay_buffer_size: 50000 # Max number of (s,a,r,s',done) transitions stored
+  target_update_freq: 10    # Episodes between target network weight syncs
+  hidden_size: 128          # Neurons per hidden layer in Q-network
+
+training:
+  max_episodes: 600         # Total training episodes
+  max_steps_per_episode: 1000
+  solve_score: 200.0        # Avg score over 100 eps = environment solved
+  checkpoint_freq: 100      # Save model checkpoint every N episodes
+  log_freq: 10              # Print training progress every N episodes
+
+paths:
+  model_dir: "models/"
+  experiment_dir: "experiments/"
+  log_file: "experiments/training_log.csv"
