@@ -1,0 +1,4 @@
+# Baseline training run outputs saved here:
+# - training_metrics.csv
+# - training_summary.json
+# - reward_curve.png
