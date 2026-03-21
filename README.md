@@ -1,26 +1,59 @@
-# 🚀 Deep Q-Learning Atari Agent
+# Deep Q-Learning Agent — LunarLander-v2
 
-A production-quality **Deep Q-Network (DQN)** agent that learns to play
-[LunarLander-v2](https://gymnasium.farama.org/environments/box2d/lunar_lander/)
-using PyTorch and Gymnasium — built as a graded assignment and portfolio project
-demonstrating applied reinforcement learning engineering.
+> A production-quality Deep Q-Network (DQN) implementation that learns to land
+> a spacecraft using PyTorch and Gymnasium — built as a graded assignment and
+> portfolio project demonstrating applied reinforcement learning engineering.
+
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://python.org)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.2-orange)](https://pytorch.org)
+[![Gymnasium](https://img.shields.io/badge/Gymnasium-0.29-green)](https://gymnasium.farama.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 ---
 
-## 🎯 Environment: LunarLander-v2
+## 📋 Overview
 
-| Property | Value |
-|---|---|
-| Environment ID | `LunarLander-v2` |
-| Observation | 8-dim continuous vector (position, velocity, angle, leg contacts) |
-| Action Space | Discrete(4): do nothing / fire left / fire main / fire right engine |
-| Reward Signal | +100–140 landing, −100 crash, small fuel penalties |
-| Solved Threshold | Average reward ≥ 200 over 100 consecutive episodes |
+This project trains a DQN agent to solve the **LunarLander-v2** environment
+from Gymnasium. The agent receives an 8-dimensional state vector (position,
+velocity, angle, leg contacts) and must learn to fire four engine commands
+to land safely on the pad without crashing.
 
-**Why LunarLander-v2?**
-Faster to train than pixel-based Atari ROMs (CPU-friendly), no ROM licensing
-issues, clean vector observations that keep the focus on DQN architecture rather
-than image preprocessing, and visually compelling results for demos.
+**Problem:** Sequential decision-making under uncertainty — the agent receives
+a reward signal and must discover the landing strategy from scratch.
+
+**Approach:** Deep Q-Network with experience replay, target network, and
+epsilon-greedy exploration — the foundational algorithm from Mnih et al. (2015)
+that first demonstrated human-level performance on Atari games.
+
+---
+
+## ✨ Features
+
+- **DQN with experience replay** — 50,000-transition ring buffer breaks
+  temporal correlation between training samples
+- **Target network** — hard-copied every 10 episodes for stable Bellman targets
+- **Epsilon-greedy + Softmax exploration** — both strategies implemented and
+  compared via controlled experiments
+- **Controlled hyperparameter experiments** — learning rate, gamma, and epsilon
+  decay sweeps with CSV outputs and comparison plots
+- **Structured logging** — Python `logging` + CSV writer in one `TrainingLogger`
+- **Reward shaping** — optional `ShapedLunarLander` wrapper (leg-contact bonus)
+- **Full theory documentation** — 6-section writeup covering Bellman equations,
+  RLHF, and DQN+LLM integration architecture
+- **Reproducible** — global seed set across Python, NumPy, and PyTorch
+
+---
+
+## 🛠 Tech Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| Python | 3.9+ | Core language |
+| PyTorch | 2.2.2 | Neural network, autograd, optimiser |
+| Gymnasium | 0.29.1 | LunarLander-v2 environment |
+| NumPy | 1.26.4 | Array operations, replay buffer |
+| Matplotlib | 3.8.4 | Training plots and dashboards |
+| PyYAML | 6.0.1 | Hyperparameter config files |
 
 ---
 
@@ -29,27 +62,48 @@ than image preprocessing, and visually compelling results for demos.
 ```
 deep-q-learning-atari-agent/
 ├── src/
-│   ├── agent/          # Q-network, replay buffer, DQN agent
-│   ├── env/            # Environment factory and wrappers
-│   ├── training/       # Training loop, evaluation, checkpointing
-│   ├── utils/          # Plotting, seeding, logging helpers
-│   └── test_env.py     # Environment smoke test (run first!)
-├── models/             # Saved model checkpoints (.pth)
-├── experiments/        # Training logs (CSV) and reward curves (PNG)
-├── docs/               # Analysis write-ups and observations
-├── video/              # Demo recordings
-├── config.yaml         # ALL hyperparameters in one place
-├── requirements.txt    # Pinned Python dependencies
+│   ├── model.py              # DQN MLP: Linear(8→128→128→4)
+│   ├── replay_buffer.py      # Experience replay (deque, 50k capacity)
+│   ├── train.py              # Baseline training loop + CLI entry point
+│   ├── test_env.py           # Environment smoke test
+│   ├── agent/
+│   │   └── dqn_agent.py      # DQNAgent: epsilon-greedy, learn(), save/load
+│   ├── env/
+│   │   └── reward_shaping.py # ShapedLunarLander wrapper (leg-contact bonus)
+│   ├── experiments/
+│   │   ├── engine.py         # Shared training engine (pluggable action selector)
+│   │   ├── exploration.py    # softmax_action() + epsilon_greedy_action()
+│   │   ├── plot_utils.py     # Multi-run comparison plots
+│   │   └── run_all.py        # Master experiment runner (Tasks 1–3)
+│   ├── training/
+│   │   ├── train.py          # Config-driven training loop
+│   │   └── evaluate.py       # Load checkpoint + greedy evaluation
+│   └── utils/
+│       ├── logger.py         # Python logging + CSV TrainingLogger
+│       ├── metrics.py        # compute_metrics(), save_metrics_csv()
+│       ├── plot.py           # plot_training_rewards(), plot_full_dashboard()
+│       └── seed.py           # set_global_seed() — full reproducibility
+├── experiments/
+│   ├── metrics/              # CSV training logs
+│   ├── plots/                # Experiment comparison PNGs
+│   ├── baseline_run/         # Baseline run outputs
+│   └── exp_*.yaml            # Hyperparameter experiment configs
+├── models/                   # Saved .pth checkpoints
+├── docs/                     # Theory writeup, environment/reward analysis
+├── config.yaml               # All hyperparameters in one place
+├── requirements.txt
+├── LICENSE
+├── ATTRIBUTION.md
 └── README.md
 ```
 
 ---
 
-## ⚙️ Setup
+## ⚙️ Installation
 
 ### Prerequisites
 - Python 3.9+
-- `swig` (required for Box2D physics engine)
+- `swig` (required by Box2D physics engine)
 
 ```bash
 # macOS
@@ -59,7 +113,7 @@ brew install swig
 sudo apt-get install swig
 ```
 
-### Installation
+### Setup
 
 ```bash
 # 1. Clone the repository
@@ -73,95 +127,196 @@ source venv/bin/activate        # macOS / Linux
 
 # 3. Install dependencies
 pip install -r requirements.txt
+
+# 4. Verify environment works
+python src/test_env.py
+```
+
+Expected output from Step 4:
+```
+✅  Environment is working correctly.
 ```
 
 ---
 
 ## ▶️ How to Run
 
-### Step 1 — Verify environment setup
-```bash
-python src/test_env.py
-```
-Expected output: 1 random episode printed step-by-step, ending with
-`✅ Environment is working correctly.`
+### Baseline Training
 
-### Step 2 — Train the DQN agent *(coming soon)*
 ```bash
+# Train with all baseline defaults (500 episodes):
+python src/train.py
+
+# Override specific parameters:
+python src/train.py --episodes 300 --lr 0.001 --gamma 0.95
+python src/train.py --episodes 500 --out-dir experiments/my_run
+
+# See all options:
+python src/train.py --help
+```
+
+### Config-Driven Training
+
+```bash
+# Train using config.yaml (600 episodes, all settings in one file):
 python src/training/train.py
-# Optional: point to a custom config
+
+# Use a custom experiment config:
 python src/training/train.py --config experiments/exp_low_lr.yaml
 ```
 
-### Step 3 — Evaluate a saved model *(coming soon)*
+### Evaluate a Saved Model
+
 ```bash
 python src/training/evaluate.py --model models/dqn_best.pth
+python src/training/evaluate.py --model models/dqn_best.pth --episodes 20 --render
+```
+
+---
+
+## 🧪 Running Experiments
+
+```bash
+# Run all 3 experiment tasks (α/γ sweep, exploration, epsilon decay):
+python src/experiments/run_all.py
+
+# Quick smoke test (50 episodes each):
+python src/experiments/run_all.py --episodes 50
+
+# Run a specific task only:
+python src/experiments/run_all.py --task 1   # learning rate + gamma sweep
+python src/experiments/run_all.py --task 2   # epsilon-greedy vs softmax
+python src/experiments/run_all.py --task 3   # epsilon decay rate comparison
+```
+
+Outputs appear in:
+```
+experiments/metrics/          ← CSV training logs
+experiments/plots/            ← Reward curves and comparison charts
+```
+
+---
+
+## 📊 Results
+
+### Environment
+
+| Property | Value |
+|---|---|
+| Environment | `LunarLander-v2` |
+| Observation | 8-dim continuous vector |
+| Action space | Discrete(4) |
+| Solved threshold | Avg reward ≥ 200 over 100 consecutive episodes |
+
+### Reward Curve
+
+> *Run `python src/train.py` to generate — plot saved to
+> `experiments/plots/reward_curve.png`*
+
+```
+experiments/plots/
+├── reward_curve.png           ← Episode rewards + 100-ep rolling average
+├── dashboard.png              ← 3-panel: rewards, rolling avg, loss
+├── reward_hp_lr_sweep.png     ← Learning rate comparison
+├── reward_hp_gamma_sweep.png  ← Gamma comparison
+├── reward_exploration.png     ← Epsilon-greedy vs softmax
+└── epsilon_decay_grid.png     ← Epsilon decay rate comparison
+```
+
+### Hyperparameter Findings
+
+| Parameter | Tested Values | Best | Notes |
+|---|---|---|---|
+| Learning rate α | 0.0001, 0.0005, 0.001 | 0.0005 | Standard DQN Adam LR |
+| Discount γ | 0.90, 0.95, 0.99 | 0.99 | γ=0.80 → landing bonus invisible |
+| Epsilon decay | 0.015, 0.005, 0.002 | 0.005 | Balanced exploration/exploitation |
+| Exploration | Epsilon-greedy, Softmax τ=1.0, τ=0.5 | Epsilon-greedy | Proven convergence via decay |
+
+---
+
+## 🏗️ DQN Architecture
+
+```
+Input: state ∈ ℝ^8  (x, y, vx, vy, angle, ang_vel, leg_L, leg_R)
+         │
+    Linear(8 → 128) + ReLU
+         │
+    Linear(128 → 128) + ReLU
+         │
+    Linear(128 → 4)
+         │
+Output: Q-values ∈ ℝ^4  (one per discrete action)
+```
+
+**Key DQN innovations used:**
+- Experience Replay — random mini-batches from a 50k-transition buffer
+- Target Network — hard-copied every 10 episodes for stable Bellman targets
+- Gradient Clipping — `max_norm=1.0` prevents exploding updates
+
+**Bellman update (per training step):**
+```
+target = r  +  γ · max_a' Q_target(s', a')  ·  (1 - done)
+loss   = MSE( Q_online(s, a_taken),  target )
 ```
 
 ---
 
 ## 🔧 Configuration
 
-All hyperparameters live in `config.yaml` — no code changes needed for experiments.
+All hyperparameters are defined in `config.yaml` — no code changes needed.
 
-| Parameter | Default | Description |
-|---|---|---|
-| `environment.name` | `LunarLander-v2` | Gymnasium environment ID |
-| `environment.seed` | `42` | Global random seed |
-| `agent.learning_rate` | `0.0005` | Adam optimizer LR |
-| `agent.gamma` | `0.99` | Discount factor |
-| `agent.epsilon_start` | `1.0` | Initial exploration rate |
-| `agent.epsilon_decay` | `0.995` | Epsilon decay per episode |
-| `agent.batch_size` | `64` | Replay buffer sample size |
-| `agent.target_update_freq` | `10` | Episodes between target net syncs |
-| `training.max_episodes` | `600` | Total training episodes |
-| `training.solve_score` | `200.0` | Avg reward threshold for "solved" |
-
----
-
-## 📊 Results
-
-*Training reward curves and analysis will be populated after training runs complete.*
-
----
-
-## 🧪 Experiment Branches
-
-Each experiment is its own branch with documented changes and measured impact.
-
-| Branch | Change | Status |
-|---|---|---|
-| `feature/env-setup-and-project-structure` | Repo scaffold + environment smoke test | ✅ Done |
-| `feature/dqn-model` | Q-network, replay buffer, DQN agent class | 🔜 Next |
-| `feature/training-loop` | Full training + evaluation pipeline | 🔜 |
-| `feature/reward-analysis` | Training graphs and metrics | 🔜 |
-| `feature/epsilon-decay` | Decay schedule comparison experiment | 🔜 |
-| `feature/hyperparameter-tuning` | LR / batch size / gamma sweeps | 🔜 |
-
----
-
-## 🏗️ Architecture (DQN)
-
-```
-State (8-dim)
-     │
-     ▼
-┌─────────────────────┐
-│  Q-Network (Online) │  ← trained every step
-│  FC(128) → FC(128)  │
-│  → Q-values (4)     │
-└─────────────────────┘
-     │                        ┌──────────────────────┐
-     │  Experience Replay     │ Target Network       │
-     │  Buffer (50k)    ───►  │ (soft-synced every   │
-     │                        │  10 episodes)        │
-     ▼                        └──────────────────────┘
-  Bellman update:
-  Q(s,a) ← r + γ · max Q_target(s', a')
+```yaml
+agent:
+  learning_rate: 0.0005
+  gamma: 0.99
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.995
+  batch_size: 64
+  replay_buffer_size: 50000
+  target_update_freq: 10
+  hidden_size: 128
 ```
 
 ---
 
-## 📄 License
+## 🚀 Future Improvements
 
-MIT — free to use, modify, and distribute with attribution.
+- [ ] **Double DQN** — use online net to select action, target net to evaluate
+- [ ] **Dueling DQN** — separate value and advantage streams in the Q-network
+- [ ] **Prioritised Experience Replay** — sample high-TD-error transitions more often
+- [ ] **Noisy Networks** — learnable noise layers to replace epsilon-greedy
+- [ ] **Video recording** — save MP4 of a trained agent via `imageio-ffmpeg`
+- [ ] **TensorBoard integration** — add `SummaryWriter` alongside CSV logging
+- [ ] **Gymnasium → Gymnasium-Robotics** — extend to continuous control tasks
+
+---
+
+## 📄 Documentation
+
+| Document | Description |
+|---|---|
+| [`docs/environment_analysis.md`](docs/environment_analysis.md) | State space, action space, Q-table feasibility |
+| [`docs/reward_analysis.md`](docs/reward_analysis.md) | Reward structure, shaping strategies |
+| [`docs/experiments.md`](docs/experiments.md) | Hyperparameter sweep design and results |
+| [`docs/experiment_analysis.md`](docs/experiment_analysis.md) | Baseline experiment hypotheses |
+| [`docs/theory_writeup.md`](docs/theory_writeup.md) | DQN theory, RLHF, DQN+LLM architecture |
+| [`ATTRIBUTION.md`](ATTRIBUTION.md) | Code attribution and research references |
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
+
+---
+
+## 🙏 Attribution
+
+See [ATTRIBUTION.md](ATTRIBUTION.md) for a full breakdown of original code,
+adapted algorithms, external libraries, and research references.
+
+Key references:
+- Mnih et al. (2015). *Human-level control through deep reinforcement learning.* Nature.
+- Sutton & Barto (2018). *Reinforcement Learning: An Introduction* (2nd ed.).
+- Gymnasium: https://gymnasium.farama.org
