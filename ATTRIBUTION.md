@@ -16,7 +16,7 @@ The following components were designed and implemented from scratch by
 | Full DQN training loop with episode/step structure | `src/train.py` |
 | Experiment runner and hyperparameter sweep framework | `src/experiments/run_all.py` |
 | Pluggable exploration engine (softmax + epsilon-greedy) | `src/experiments/engine.py`, `src/experiments/exploration.py` |
-| Reward shaping wrapper for LunarLander-v2 | `src/env/reward_shaping.py` |
+| Reward shaping wrapper for LunarLander-v3 | `src/env/reward_shaping.py` |
 | Metrics utility (compute, save, print) | `src/utils/metrics.py` |
 | Structured logging combining Python logging + CSV | `src/utils/logger.py` |
 | Three-panel training dashboard plot | `src/utils/plot.py` |
@@ -35,7 +35,7 @@ The following components were adapted from well-known sources with modifications
 - **Inspired by:** PyTorch official DQN tutorial
   https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
 - **Adaptation:** Changed from CNN (used for CartPole pixel observations) to
-  MLP for LunarLander-v2 vector observations. All layer sizes, activation
+  MLP for LunarLander-v3 vector observations. All layer sizes, activation
   choices, and forward-pass logic were written independently to match this
   project's state/action dimensions.
 
@@ -76,7 +76,7 @@ respective licenses:
 
 | Library | Version | License | Purpose |
 |---|---|---|---|
-| [Gymnasium](https://gymnasium.farama.org/) | 0.29.1 | MIT | LunarLander-v2 environment |
+| [Gymnasium](https://gymnasium.farama.org/) | 0.29.1 | MIT | LunarLander-v3 environment |
 | [PyTorch](https://pytorch.org/) | 2.2.2 | BSD-3-Clause | Neural network, autograd |
 | [NumPy](https://numpy.org/) | 1.26.4 | BSD-3-Clause | Array operations |
 | [Matplotlib](https://matplotlib.org/) | 3.8.4 | PSF | Training plots |

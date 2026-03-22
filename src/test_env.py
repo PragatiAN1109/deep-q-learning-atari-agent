@@ -11,7 +11,7 @@ Purpose:
 Usage:
     python src/test_env.py
 
-Environment Choice — LunarLander-v2:
+Environment Choice — LunarLander-v3:
     - Observation : 8-dimensional continuous vector
                     (x pos, y pos, x vel, y vel, angle, angular vel,
                      left leg contact, right leg contact)
@@ -24,7 +24,7 @@ Environment Choice — LunarLander-v2:
                     -100 for crashing, small penalties for fuel use
     - Solved when : average reward >= 200 over 100 consecutive episodes
 
-    Why LunarLander-v2 over raw Atari ROM envs?
+    Why LunarLander-v3 over raw Atari ROM envs?
     * No ROM licensing issues (Atari ROMs require separate install)
     * Trains on CPU in minutes vs hours for pixel-based Atari
     * Clean vector observation — focuses on DQN logic, not preprocessing
@@ -52,7 +52,7 @@ def load_config(path: str = "config.yaml") -> dict:
     if not os.path.exists(path):
         print(f"[WARN] config.yaml not found at '{path}', using defaults.")
         return {
-            "environment": {"name": "LunarLander-v2", "seed": 42}
+            "environment": {"name": "LunarLander-v3", "seed": 42}
         }
     with open(path, "r") as f:
         return yaml.safe_load(f)
@@ -84,7 +84,7 @@ def run_random_episode(env_name: str, seed: int = 42) -> None:
       - Episode terminates or truncates correctly
 
     Args:
-        env_name: Gymnasium environment ID (e.g. 'LunarLander-v2')
+        env_name: Gymnasium environment ID (e.g. 'LunarLander-v3')
         seed    : Random seed for reproducibility
     """
     print("=" * 60)

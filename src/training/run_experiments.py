@@ -95,7 +95,7 @@ def plot_comparison(configs: list, output_path: str) -> None:
     """
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 9), sharex=True)
     fig.suptitle(
-        "DQN Hyperparameter Comparison — LunarLander-v2",
+        "DQN Hyperparameter Comparison — LunarLander-v3",
         fontsize=14, fontweight="bold"
     )
 

@@ -1,7 +1,7 @@
 # Theory & Design Writeup — Deep Q-Learning Agent
 
 **Repository:** https://github.com/PragatiAN1109/deep-q-learning-atari-agent
-**Environment:** LunarLander-v2 (Gymnasium)
+**Environment:** LunarLander-v3 (Gymnasium)
 **Author:** Pragati Narote | **Date:** March 2026
 
 ---
@@ -208,7 +208,7 @@ preferences.
 | Concept | DQN (this repo) | RLHF |
 |---|---|---|
 | Agent | DQN online network | LLM policy |
-| Environment | LunarLander-v2 physics | Human preference reward model |
+| Environment | LunarLander-v3 physics | Human preference reward model |
 | Reward | Physics-based scalar | Reward model score |
 | Experience storage | Replay buffer (50k transitions) | Rollout buffer |
 | Update algorithm | Bellman MSE + Adam | PPO |

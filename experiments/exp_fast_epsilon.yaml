@@ -17,7 +17,7 @@
 # ============================================================
 
 environment:
-  name: "LunarLander-v2"
+  name: "LunarLander-v3"
   seed: 42
   render_mode: null
 

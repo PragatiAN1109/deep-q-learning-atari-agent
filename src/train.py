@@ -11,7 +11,7 @@ Task 5 — Training Loop:
 
 Task 6 — Baseline Run:
     Uses assignment-style baseline parameters, adjusted where the original
-    values are unsuitable for Deep Q-Learning with PyTorch + LunarLander-v2.
+    values are unsuitable for Deep Q-Learning with PyTorch + LunarLander-v3.
     See PARAMETER NOTES below for the full rationale.
 
 PARAMETER NOTES — Assignment values vs. what we use here:
@@ -78,7 +78,7 @@ import torch.optim as optim
 # ═══════════════════════════════════════════════════════════════
 DEFAULTS = {
     # Environment
-    "env_name"        : "LunarLander-v2",
+    "env_name"        : "LunarLander-v3",
     "seed"            : 42,
 
     # Training schedule
@@ -343,7 +343,7 @@ def save_plots(rewards: list, out_dir: str) -> None:
                label="Solve threshold (200)", alpha=0.8)
     ax.set_xlabel("Episode")
     ax.set_ylabel("Total Reward")
-    ax.set_title("DQN Baseline Training — LunarLander-v2\nReward per Episode")
+    ax.set_title("DQN Baseline Training — LunarLander-v3\nReward per Episode")
     ax.legend(loc="upper left", fontsize=9)
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
@@ -362,7 +362,7 @@ def save_plots(rewards: list, out_dir: str) -> None:
                 label="Solve threshold (200)", alpha=0.8)
     ax2.set_xlabel("Episode")
     ax2.set_ylabel("Total Reward")
-    ax2.set_title("DQN Baseline Training — LunarLander-v2")
+    ax2.set_title("DQN Baseline Training — LunarLander-v3")
     ax2.legend(loc="upper left", fontsize=9)
     ax2.grid(True, alpha=0.3)
     plt.tight_layout()
@@ -414,8 +414,8 @@ def train(args: argparse.Namespace) -> None:
 
     # ── Environment ──────────────────────────────────────────
     env        = gym.make(args.env_name, render_mode=None)
-    state_dim  = env.observation_space.shape[0]   # 8 for LunarLander-v2
-    action_dim = env.action_space.n               # 4 for LunarLander-v2
+    state_dim  = env.observation_space.shape[0]   # 8 for LunarLander-v3
+    action_dim = env.action_space.n               # 4 for LunarLander-v3
     print(f"[Env] {args.env_name}  obs_dim={state_dim}  action_dim={action_dim}\n")
 
     # ── Networks: online (trained) + target (stable bootstrap) ─
@@ -583,7 +583,7 @@ def parse_args() -> argparse.Namespace:
     All parameters can be overridden without editing source code.
     """
     p = argparse.ArgumentParser(
-        description="DQN Baseline Training — LunarLander-v2",
+        description="DQN Baseline Training — LunarLander-v3",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     D = DEFAULTS  # shorthand

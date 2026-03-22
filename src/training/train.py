@@ -1,7 +1,7 @@
 """
 src/training/train.py
 ----------------------
-Main DQN training loop for LunarLander-v2.
+Main DQN training loop for LunarLander-v3.
 
 What this script does, step by step:
     1. Load config.yaml (hyperparameters, paths, env name)
@@ -209,7 +209,7 @@ def train(cfg: dict) -> None:
 
 # ─────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Train DQN on LunarLander-v2")
+    parser = argparse.ArgumentParser(description="Train DQN on LunarLander-v3")
     parser.add_argument(
         "--config", type=str, default="config.yaml",
         help="Path to config YAML file (default: config.yaml)"

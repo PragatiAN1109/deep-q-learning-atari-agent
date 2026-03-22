@@ -1,10 +1,10 @@
-# DQN Experiment Analysis — LunarLander-v2
+# DQN Experiment Analysis — LunarLander-v3
 
 ## 1. Overview
 
 This document describes the experimental design, hypotheses, and expected
 observations for the DQN hyperparameter study conducted on the
-**LunarLander-v2** environment.
+**LunarLander-v3** environment.
 
 Each experiment changes **one parameter** relative to the baseline to isolate
 the effect of that parameter on learning performance.
@@ -15,7 +15,7 @@ the effect of that parameter on learning performance.
 
 | Property         | Value                                             |
 |------------------|---------------------------------------------------|
-| Environment      | `LunarLander-v2` (Gymnasium)                      |
+| Environment      | `LunarLander-v3` (Gymnasium)                      |
 | Observation      | 8-dim vector: x/y pos, x/y vel, angle, ang vel, leg contacts |
 | Action Space     | Discrete(4): do nothing, fire left, fire main, fire right |
 | Reward Signal    | +100–140 for landing, −100 crash, fuel penalties  |
@@ -142,7 +142,7 @@ keeping the agent in near-random exploration mode throughout training.
 - Replay buffer stays diverse throughout training
 - May outperform fast-decay if the environment has sparse or deceptive rewards
   that require thorough exploration to discover good strategies
-- For LunarLander-v2 (dense rewards), we expect this to underperform baseline
+- For LunarLander-v3 (dense rewards), we expect this to underperform baseline
 
 **What to look for in the plot:**
 - Does reward stay low for much longer before climbing?

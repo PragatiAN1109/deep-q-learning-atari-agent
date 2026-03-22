@@ -170,7 +170,7 @@ if __name__ == "__main__":
 
     CAPACITY   = cfg["agent"]["replay_buffer_size"]  # 50000
     BATCH_SIZE = cfg["agent"]["batch_size"]           # 64
-    STATE_DIM  = 8   # LunarLander-v2
+    STATE_DIM  = 8   # LunarLander-v3
     ACTION_DIM = 4
 
     buf = ReplayBuffer(capacity=CAPACITY)

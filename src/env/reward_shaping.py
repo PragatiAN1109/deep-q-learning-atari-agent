@@ -1,7 +1,7 @@
 """
 src/env/reward_shaping.py
 --------------------------
-Optional reward shaping wrapper for LunarLander-v2.
+Optional reward shaping wrapper for LunarLander-v3.
 
 Strategy 1 — Leg Contact Bonus:
     Adds a small positive bonus proportional to leg-ground contact.
@@ -24,7 +24,7 @@ Usage (optional — does NOT break existing code):
     import gymnasium as gym
     from src.env.reward_shaping import ShapedLunarLander
 
-    base_env = gym.make("LunarLander-v2")
+    base_env = gym.make("LunarLander-v3")
     env = ShapedLunarLander(base_env, leg_bonus_weight=2.0)
 
     # Then use env exactly like the original:
@@ -45,7 +45,7 @@ from gymnasium import Env
 
 class ShapedLunarLander(gym.Wrapper):
     """
-    Reward shaping wrapper for LunarLander-v2.
+    Reward shaping wrapper for LunarLander-v3.
 
     Adds a leg-contact bonus to the native reward signal to provide
     denser feedback for the foot-placement phase of landing.

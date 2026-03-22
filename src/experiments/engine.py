@@ -44,7 +44,7 @@ ActionSelector = Callable[
 
 
 def run_experiment(
-    env_name:        str   = "LunarLander-v2",
+    env_name:        str   = "LunarLander-v3",
     total_episodes:  int   = 300,
     max_steps:       int   = 500,
     learning_rate:   float = 0.0005,
