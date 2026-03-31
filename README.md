@@ -1,4 +1,4 @@
-# Deep Q-Learning Agent — LunarLander-v2
+# Deep Q-Learning Agent — LunarLander
 
 > A production-quality Deep Q-Network (DQN) implementation that learns to land
 > a spacecraft using PyTorch and Gymnasium — built as a graded assignment and
@@ -6,24 +6,38 @@
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.2-orange)](https://pytorch.org)
-[![Gymnasium](https://img.shields.io/badge/Gymnasium-0.29-green)](https://gymnasium.farama.org)
+[![Gymnasium](https://img.shields.io/badge/Gymnasium-1.1.1-green)](https://gymnasium.farama.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
+> **Note on repository name:** This repository is named
+> `deep-q-learning-atari-agent` for historical reasons (the original assignment
+> brief referenced Atari environments). The actual implementation targets
+> **LunarLander-v3**, a Box2D-based Gymnasium environment — not an Atari
+> ROM-based environment. No Atari ROMs, ALE, or pixel preprocessing are used.
 
 ---
 
 ## 📋 Overview
 
-This project trains a DQN agent to solve the **LunarLander-v2** environment
+This project trains a DQN agent to solve the **LunarLander-v3** environment
 from Gymnasium. The agent receives an 8-dimensional state vector (position,
 velocity, angle, leg contacts) and must learn to fire four engine commands
 to land safely on the pad without crashing.
 
 **Problem:** Sequential decision-making under uncertainty — the agent receives
-a reward signal and must discover the landing strategy from scratch.
+a reward signal and must discover the landing strategy from scratch, with no
+prior knowledge of the physics.
 
 **Approach:** Deep Q-Network with experience replay, target network, and
 epsilon-greedy exploration — the foundational algorithm from Mnih et al. (2015)
-that first demonstrated human-level performance on Atari games.
+that first demonstrated human-level performance on classic control tasks.
+
+**Why LunarLander-v3?**
+- CPU-friendly — trains in 30–60 minutes (no GPU required)
+- No ROM licensing issues (unlike Atari environments)
+- Clean 8-dim vector observation — focuses on DQN architecture, not image preprocessing
+- Dense reward signal — ideal for demonstrating Q-value convergence
+- Visually compelling results for demos and video recordings
 
 ---
 
@@ -36,11 +50,11 @@ that first demonstrated human-level performance on Atari games.
   compared via controlled experiments
 - **Controlled hyperparameter experiments** — learning rate, gamma, and epsilon
   decay sweeps with CSV outputs and comparison plots
-- **Structured logging** — Python `logging` + CSV writer in one `TrainingLogger`
-- **Reward shaping** — optional `ShapedLunarLander` wrapper (leg-contact bonus)
+- **Structured logging** — Python `logging` module + CSV writer via `TrainingLogger`
+- **Optional reward shaping** — `ShapedLunarLander` wrapper (leg-contact bonus)
 - **Full theory documentation** — 6-section writeup covering Bellman equations,
-  RLHF, and DQN+LLM integration architecture
-- **Reproducible** — global seed set across Python, NumPy, and PyTorch
+  RLHF, and a proposed DQN + LLM integration architecture
+- **Fully reproducible** — global seed set across Python, NumPy, and PyTorch
 
 ---
 
@@ -50,10 +64,15 @@ that first demonstrated human-level performance on Atari games.
 |---|---|---|
 | Python | 3.9+ | Core language |
 | PyTorch | 2.2.2 | Neural network, autograd, optimiser |
-| Gymnasium | 0.29.1 | LunarLander-v2 environment |
+| Gymnasium | 1.1.1 | LunarLander-v3 environment (Box2D) |
 | NumPy | 1.26.4 | Array operations, replay buffer |
 | Matplotlib | 3.8.4 | Training plots and dashboards |
 | PyYAML | 6.0.1 | Hyperparameter config files |
+
+> **Tested with:** Python 3.11, macOS Sequoia (arm64) and Ubuntu 22.04 (x86_64).
+> Gymnasium 1.1.1 is required — earlier versions (≤ 0.29.x) do not include
+> `LunarLander-v3` and will raise `VersionNotFound`.
+
 
 ---
 
@@ -62,7 +81,7 @@ that first demonstrated human-level performance on Atari games.
 ```
 deep-q-learning-atari-agent/
 ├── src/
-│   ├── model.py              # DQN MLP: Linear(8→128→128→4)
+│   ├── model.py              # DQN MLP: Linear(8 → 128 → 128 → 4)
 │   ├── replay_buffer.py      # Experience replay (deque, 50k capacity)
 │   ├── train.py              # Baseline training loop + CLI entry point
 │   ├── test_env.py           # Environment smoke test
@@ -74,7 +93,7 @@ deep-q-learning-atari-agent/
 │   │   ├── engine.py         # Shared training engine (pluggable action selector)
 │   │   ├── exploration.py    # softmax_action() + epsilon_greedy_action()
 │   │   ├── plot_utils.py     # Multi-run comparison plots
-│   │   └── run_all.py        # Master experiment runner (Tasks 1–3)
+│   │   └── run_all.py        # Master experiment runner
 │   ├── training/
 │   │   ├── train.py          # Config-driven training loop
 │   │   └── evaluate.py       # Load checkpoint + greedy evaluation
@@ -102,6 +121,7 @@ deep-q-learning-atari-agent/
 ## ⚙️ Installation
 
 ### Prerequisites
+
 - Python 3.9+
 - `swig` (required by Box2D physics engine)
 
@@ -128,7 +148,7 @@ source venv/bin/activate        # macOS / Linux
 # 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Verify environment works
+# 4. Verify the environment works
 python src/test_env.py
 ```
 
@@ -136,6 +156,9 @@ Expected output from Step 4:
 ```
 ✅  Environment is working correctly.
 ```
+
+> **Important:** This project requires `gymnasium>=1.0` for `LunarLander-v3`.
+> Running with `gymnasium==0.29.x` will raise `VersionNotFound`.
 
 ---
 
@@ -158,7 +181,7 @@ python src/train.py --help
 ### Config-Driven Training
 
 ```bash
-# Train using config.yaml (600 episodes, all settings in one file):
+# Train using config.yaml (600 episodes):
 python src/training/train.py
 
 # Use a custom experiment config:
@@ -203,9 +226,10 @@ experiments/plots/            ← Reward curves and comparison charts
 
 | Property | Value |
 |---|---|
-| Environment | `LunarLander-v2` |
+| Environment | `LunarLander-v3` (Gymnasium 1.1.1) |
 | Observation | 8-dim continuous vector |
-| Action space | Discrete(4) |
+| Action space | Discrete(4): do nothing / fire left / fire main / fire right |
+| Reward signal | +100–140 landing, −100 crash, fuel penalties per step |
 | Solved threshold | Avg reward ≥ 200 over 100 consecutive episodes |
 
 ### Reward Curve
@@ -216,21 +240,21 @@ experiments/plots/            ← Reward curves and comparison charts
 ```
 experiments/plots/
 ├── reward_curve.png           ← Episode rewards + 100-ep rolling average
-├── dashboard.png              ← 3-panel: rewards, rolling avg, loss
-├── reward_hp_lr_sweep.png     ← Learning rate comparison
-├── reward_hp_gamma_sweep.png  ← Gamma comparison
-├── reward_exploration.png     ← Epsilon-greedy vs softmax
+├── dashboard.png              ← 3-panel: rewards, rolling avg, MSE loss
+├── reward_hp_lr_sweep.png     ← Learning rate α comparison
+├── reward_hp_gamma_sweep.png  ← Discount factor γ comparison
+├── reward_exploration.png     ← Epsilon-greedy vs Softmax
 └── epsilon_decay_grid.png     ← Epsilon decay rate comparison
 ```
 
 ### Hyperparameter Findings
 
-| Parameter | Tested Values | Best | Notes |
+| Parameter | Tested Values | Best | Rationale |
 |---|---|---|---|
-| Learning rate α | 0.0001, 0.0005, 0.001 | 0.0005 | Standard DQN Adam LR |
-| Discount γ | 0.90, 0.95, 0.99 | 0.99 | γ=0.80 → landing bonus invisible |
-| Epsilon decay | 0.015, 0.005, 0.002 | 0.005 | Balanced exploration/exploitation |
-| Exploration | Epsilon-greedy, Softmax τ=1.0, τ=0.5 | Epsilon-greedy | Proven convergence via decay |
+| Learning rate α | 0.0001, 0.0005, 0.001 | **0.0005** | Standard Adam LR for DQN |
+| Discount γ | 0.90, 0.95, 0.99 | **0.99** | γ=0.80 makes landing bonus invisible (0.8^200 ≈ 0) |
+| Epsilon decay | 0.015, 0.005, 0.002 | **0.005** | Balanced exploration / exploitation |
+| Exploration | Epsilon-greedy, Softmax τ=1.0/0.5 | **Epsilon-greedy** | Proven convergence via scheduled decay |
 
 ---
 
@@ -248,10 +272,10 @@ Input: state ∈ ℝ^8  (x, y, vx, vy, angle, ang_vel, leg_L, leg_R)
 Output: Q-values ∈ ℝ^4  (one per discrete action)
 ```
 
-**Key DQN innovations used:**
-- Experience Replay — random mini-batches from a 50k-transition buffer
-- Target Network — hard-copied every 10 episodes for stable Bellman targets
-- Gradient Clipping — `max_norm=1.0` prevents exploding updates
+**Key DQN innovations:**
+- **Experience Replay** — random mini-batches from a 50k-transition buffer
+- **Target Network** — hard-copied every 10 episodes for stable Bellman targets
+- **Gradient Clipping** — `max_norm=1.0` prevents exploding updates in early training
 
 **Bellman update (per training step):**
 ```
@@ -263,9 +287,13 @@ loss   = MSE( Q_online(s, a_taken),  target )
 
 ## 🔧 Configuration
 
-All hyperparameters are defined in `config.yaml` — no code changes needed.
+All hyperparameters live in `config.yaml` — no source code changes needed.
 
 ```yaml
+environment:
+  name: "LunarLander-v3"
+  seed: 42
+
 agent:
   learning_rate: 0.0005
   gamma: 0.99
@@ -283,12 +311,12 @@ agent:
 ## 🚀 Future Improvements
 
 - [ ] **Double DQN** — use online net to select action, target net to evaluate
-- [ ] **Dueling DQN** — separate value and advantage streams in the Q-network
-- [ ] **Prioritised Experience Replay** — sample high-TD-error transitions more often
+- [ ] **Dueling DQN** — separate value and advantage streams
+- [ ] **Prioritised Experience Replay** — weight high-TD-error transitions
 - [ ] **Noisy Networks** — learnable noise layers to replace epsilon-greedy
-- [ ] **Video recording** — save MP4 of a trained agent via `imageio-ffmpeg`
-- [ ] **TensorBoard integration** — add `SummaryWriter` alongside CSV logging
-- [ ] **Gymnasium → Gymnasium-Robotics** — extend to continuous control tasks
+- [ ] **Video recording** — save MP4 of trained agent via `imageio-ffmpeg`
+- [ ] **TensorBoard integration** — `SummaryWriter` alongside CSV logging
+- [ ] **Continuous action space** — extend to `LunarLander-v3` continuous mode
 
 ---
 

@@ -1,8 +1,8 @@
-# Reward Structure Analysis — LunarLander-v2
+# Reward Structure Analysis — LunarLander-v3
 
 ## 1. Overview
 
-This document analyses the reward function of **LunarLander-v2** as it
+This document analyses the reward function of **LunarLander-v3** as it
 operates in this repo — how rewards are given, when penalties are applied,
 why the structure works for DQN training, its limitations, and two concrete
 reward shaping strategies (one implemented).
@@ -11,7 +11,7 @@ reward shaping strategies (one implemented).
 
 ## 2. Native Reward Structure
 
-LunarLander-v2 provides a **dense, shaped reward** — the agent receives a
+LunarLander-v3 provides a **dense, shaped reward** — the agent receives a
 non-zero scalar reward at almost every step, not just at the end of the
 episode. This is in contrast to sparse-reward environments (like MountainCar)
 where reward only arrives at the goal.
@@ -188,7 +188,7 @@ any existing training files — it is an optional drop-in wrapper.
 To use it, wrap the environment before training:
 ```python
 from src.env.reward_shaping import ShapedLunarLander
-env = ShapedLunarLander(gym.make("LunarLander-v2"))
+env = ShapedLunarLander(gym.make("LunarLander-v3"))
 ```
 All other training code remains identical.
 

@@ -41,7 +41,7 @@ from src.utils.logger import get_logger
 _log = get_logger(__name__)
 
 # ── Shared style constants ────────────────────────────────────
-_SOLVE_THRESHOLD = 200.0        # LunarLander-v2 solve score
+_SOLVE_THRESHOLD = 200.0        # LunarLander-v3 solve score
 _FIG_DPI         = 150
 _COLOR_RAW       = "steelblue"
 _COLOR_AVG       = "darkorange"
@@ -101,7 +101,7 @@ def plot_training_rewards(
     eps, rews, avgs = data["episodes"], data["rewards"], data["avg_rewards"]
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
-    fig.suptitle("DQN Training — LunarLander-v2", fontsize=14, fontweight="bold")
+    fig.suptitle("DQN Training — LunarLander-v3", fontsize=14, fontweight="bold")
 
     # ── Top: raw episode rewards ──────────────────────────────
     ax1.plot(eps, rews, color=_COLOR_RAW, alpha=0.5,
@@ -161,7 +161,7 @@ def plot_loss_curve(
                label="Loss = 1.0 (reference)")
     ax.set_xlabel("Episode")
     ax.set_ylabel("MSE Loss")
-    ax.set_title("DQN Training Loss — LunarLander-v2",
+    ax.set_title("DQN Training Loss — LunarLander-v3",
                  fontsize=13, fontweight="bold")
     ax.legend(fontsize=9)
     ax.grid(True, alpha=0.3)
@@ -195,7 +195,7 @@ def plot_full_dashboard(
     loss_pairs = [(e, l) for e, l in zip(eps, data["losses"]) if l is not None]
 
     fig, axes = plt.subplots(3, 1, figsize=(11, 10), sharex=False)
-    fig.suptitle("DQN Training Dashboard — LunarLander-v2",
+    fig.suptitle("DQN Training Dashboard — LunarLander-v3",
                  fontsize=14, fontweight="bold")
 
     # Panel 1: raw rewards

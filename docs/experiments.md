@@ -3,7 +3,7 @@
 ## 1. Overview
 
 This document covers four controlled experiments run on the DQN agent
-trained on **LunarLander-v2**.  Each experiment changes one variable at
+trained on **LunarLander-v3**.  Each experiment changes one variable at
 a time while holding all others at the baseline, so the effect of each
 parameter can be isolated and measured.
 
@@ -22,7 +22,7 @@ All experiments use these values unless stated otherwise:
 
 | Parameter | Baseline Value |
 |---|---|
-| Environment | `LunarLander-v2` |
+| Environment | `LunarLander-v3` |
 | Learning rate α | 0.0005 |
 | Discount factor γ | 0.99 |
 | Epsilon start | 1.0 |

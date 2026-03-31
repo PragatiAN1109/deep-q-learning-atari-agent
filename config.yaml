@@ -8,7 +8,7 @@
 # ============================================================
 
 environment:
-  name: "LunarLander-v2"   # Gymnasium environment ID
+  name: "LunarLander-v3"   # Gymnasium environment ID
   seed: 42                  # Global random seed for reproducibility
   render_mode: null         # null = headless training; "human" = live window
 

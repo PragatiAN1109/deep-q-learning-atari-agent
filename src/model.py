@@ -4,7 +4,7 @@ src/model.py
 Deep Q-Network (DQN) model definition.
 
 Architecture choice — MLP (Multi-Layer Perceptron):
-    The environment is LunarLander-v2, which provides an 8-dimensional
+    The environment is LunarLander-v3, which provides an 8-dimensional
     continuous vector as the observation (position, velocity, angle, etc.).
     There are NO raw pixel frames involved, so a CNN is NOT needed here.
 
@@ -31,7 +31,7 @@ class DQN(nn.Module):
     Deep Q-Network using a fully-connected MLP architecture.
 
     Suitable for environments with low-dimensional vector observations
-    such as LunarLander-v2 (obs_dim=8, action_dim=4).
+    such as LunarLander-v3 (obs_dim=8, action_dim=4).
 
     Args:
         state_dim   (int): Dimensionality of the input observation vector.
@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     hidden_size = cfg["agent"]["hidden_size"]
 
-    # LunarLander-v2 has obs_dim=8, action_dim=4
+    # LunarLander-v3 has obs_dim=8, action_dim=4
     STATE_DIM  = 8
     ACTION_DIM = 4
 

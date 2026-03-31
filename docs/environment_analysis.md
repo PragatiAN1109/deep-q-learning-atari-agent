@@ -1,9 +1,9 @@
-# Environment Analysis — LunarLander-v2
+# Environment Analysis — LunarLander-v3
 
 ## 1. Overview
 
 This document provides a complete technical analysis of the environment
-used in this DQN project: **LunarLander-v2** from the
+used in this DQN project: **LunarLander-v3** from the
 [Gymnasium](https://gymnasium.farama.org/environments/box2d/lunar_lander/)
 `box2d` suite.
 
@@ -13,9 +13,9 @@ Every detail below is tied directly to how this repo's code
 
 ---
 
-## 2. Why LunarLander-v2?
+## 2. Why LunarLander-v3?
 
-| Criterion | LunarLander-v2 | Raw Atari (e.g. Breakout) |
+| Criterion | LunarLander-v3 | Raw Atari (e.g. Breakout) |
 |---|---|---|
 | Observation type | 8-dim float vector | 210×160×3 RGB image |
 | Preprocessing needed | None | Grayscale, resize, frame stack |
@@ -24,7 +24,7 @@ Every detail below is tied directly to how this repo's code
 | Reward signal | Dense (every step) | Sparse (score changes only) |
 | Suited for MLP | ✅ Yes | ❌ No (needs CNN) |
 
-LunarLander-v2 keeps the focus on DQN architecture and learning dynamics
+LunarLander-v3 keeps the focus on DQN architecture and learning dynamics
 rather than on image preprocessing pipelines.
 
 ---
@@ -118,7 +118,7 @@ Q[state][action] = expected cumulative reward
 This works perfectly for small discrete environments (e.g. FrozenLake-4×4
 has 16 states × 4 actions = 64 entries).
 
-### Why a Q-table is NOT feasible for LunarLander-v2
+### Why a Q-table is NOT feasible for LunarLander-v3
 
 The state space is **continuous** — each of the 8 observation dimensions
 can take infinitely many real values. To build a Q-table we would need to
@@ -166,7 +166,7 @@ Input:  s ∈ ℝ^8   (continuous state vector)
 Output: Q(s, ·) ∈ ℝ^4
 ```
 Total trainable parameters: `8×128 + 128 + 128×128 + 128 + 128×4 + 4 = 18,308`
-— trivially small, yet powerful enough to solve LunarLander-v2.
+— trivially small, yet powerful enough to solve LunarLander-v3.
 
 ---
 
@@ -234,7 +234,7 @@ Sample output:
 
 | Property | Value |
 |---|---|
-| Environment ID | `LunarLander-v2` |
+| Environment ID | `LunarLander-v3` |
 | Observation type | Continuous, float32 |
 | Observation shape | `(8,)` |
 | Action space | `Discrete(4)` |
